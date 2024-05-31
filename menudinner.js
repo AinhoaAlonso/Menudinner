@@ -6,8 +6,7 @@ let showLunchAcc = '';
 let showOrder = '';
 let orderDrinkFood = [];
 let userchoice = true;
-const currentDate = new Date();
-const hour = currentDate.getHours();
+let selecHour = '';
 
 const menus = [
   { 
@@ -70,19 +69,19 @@ for(const menu of menus){
 
 function schedule(){
   
-  alert (`Bienvenidos a nuestro restaurante:\n\nEl menú desayuno está disponible de 7 am - 11 am \nEl menú comidas está disponible de 12 pm - 16 pm \nEl menú cenas está disponible de 18 pm - 23 pm \n\nTe redirigimos al menú disponible`);
-  
-  if (hour >= 7 && hour <= 11){
-    orderBreakfast();
-  }
-  else if (hour > 11 && hour <=16){
-    orderLunchDinner();
-  }
-  else if (hour > 18 && hour <=23){
-    orderDinner();
-  } 
-  else if (hour >= 00 && hour <7){
-    alert('En estos momentos el restaurante está cerrado. Nuestro horario es de 7am a 23pm. Disculpe las molestias.')
+  selecHour = prompt (`Bienvenidos a nuestro restaurante:\n\nEl menú desayuno está disponible de 7 am - 11 am \nEl menú comidas está disponible de 12 pm - 16 pm \nEl menú cenas está disponible de 18 pm - 22 pm \n\nIntroduce la hora entre 00 y 23 `);
+
+  if (selecHour === null || selecHour === '' || isNaN(selecHour) || Number.isInteger(selecHour)){
+    alert('Tienes que introducir una hora entre 00 y 23');
+    schedule();
+  } else if (selecHour >= 7 && selecHour <= 11){
+      orderBreakfast();
+  } else if (selecHour > 11 && selecHour <=16){
+      orderLunchDinner();
+  } else if (selecHour >= 18 && selecHour <23){
+      orderDinner();
+  } else {
+      alert('En estos momentos el restaurante está cerrado. Nuestro horario es de 7am a 22pm. Disculpe las molestias.')
   }
 }
 
@@ -108,7 +107,7 @@ function priceOrder(){
   const cost = orderDrinkFood.reduce((total, value) => {
     if(value.precio !== undefined){
       sumPedido += value.precio;
-      if (hour > 18 && hour <=23){
+      if (selecHour >= 18 && selecHour <23){
         incremento += parseFloat((value.precio * 0.25).toFixed(2));
       }
     }
@@ -126,7 +125,7 @@ function order(title, menu, tipo, menuselection, ids){
   while (userchoice == true) {
     let selectOrder = prompt(`Menú ${title}\n\¿Que te apetece de ${tipo}?(Introduce el nº de tu elección)\n\n${menu}\n\Pulsa 0 para salir`);
     
-    if (selectOrder === null || selectOrder === ''){
+    if (selectOrder === null || selectOrder === '' || isNaN(selectOrder) || Number.isInteger(selectOrder)){
       alert('Hay que introducir un numero de la lista ó pulsa 0 para continuar');
       
     } else {
@@ -139,14 +138,9 @@ function order(title, menu, tipo, menuselection, ids){
           const orderSelected = menuselection.find(item => item.id === selectOrder);
      
             if(orderSelected){
-                  addOrder(orderSelected);
-            } else{
-              alert('Hay que introducir un numero de la lista ó pulsa 0 para continuar')
-              }
-            let selectMore = confirm(`Menú ${title}\n\¿Quieres elegir algo más?`);
-            if (selectMore === false){
-              userchoice = false;
-            }
+              addOrder(orderSelected);
+              userchoice = false;  
+            } 
         }
           else{
             alert('Hay que introducir un numero de la lista ó pulsa 0 para continuar')
